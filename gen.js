@@ -15,9 +15,12 @@ const placeholderContent = document.getElementById('placeholder-content');
 const loader = document.getElementById('loader');
 const outputImage = document.getElementById('output-image');
 
-// Hugging Face Free Model API (Stable Diffusion)
-const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
-const API_KEY = "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"; // Apni asli Hugging Face API key yahan double quotes ke andar rakh dein
+// Apni API keys yahan enter karein (jahan zaroorat ho)
+const API_KEYS = {
+    huggingface: "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",
+    prodia: "YAHAN_PRODIA_KEY_DALO",
+    stability: "YAHAN_STABILITY_KEY_DALO"
+};
 
 generateBtn.addEventListener('click', async () => {
     const promptText = promptInput.value.trim();
@@ -31,49 +34,141 @@ generateBtn.addEventListener('click', async () => {
     outputImage.style.display = 'none';
     loader.style.display = 'block';
     generateBtn.disabled = true;
-    generateBtn.textContent = "Generating AI Art...";
+    generateBtn.textContent = "Generating via AI Network...";
 
+    let imageUrl = null;
+
+    // --- STEP 1: Try Hugging Face ---
     try {
-        // Calling Hugging Face API with your key
-        const response = await fetch(API_URL, {
+        console.log("Trying Hugging Face...");
+        const response = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${API_KEY}`,
+                "Authorization": `Bearer ${API_KEYS.huggingface}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ inputs: promptText })
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to generate image. Please try again.');
+        if (response.ok) {
+            const blob = await response.blob();
+            imageUrl = URL.createObjectURL(blob);
         }
+    } catch (e) {
+        console.log("Hugging Face failed, switching to Pollinations...");
+    }
 
-        // Response ko image blob mein convert karna
-        const imageBlob = await response.blob();
-        const imageUrl = URL.createObjectURL(imageBlob);
+    // --- STEP 2: Try Pollinations (Agar HF fail ho gaya) ---
+    if (!imageUrl) {
+        try {
+            console.log("Trying Pollinations...");
+            const encodedPrompt = encodeURIComponent(promptText);
+            const pollUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
+            const imgCheck = new Image();
+            imgCheck.src = pollUrl;
+            await new Promise((resolve, reject) => {
+                imgCheck.onload = resolve;
+                imgCheck.onerror = reject;
+            });
+            imageUrl = pollUrl;
+        } catch (e) {
+            console.log("Pollinations failed, switching to Prodia...");
+        }
+    }
 
+    // --- STEP 3: Try Prodia (Agar Pollinations bhi fail ho gaya) ---
+    if (!imageUrl) {
+        try {
+            console.log("Trying Prodia...");
+            const response = await fetch("https://api.prodia.com/v1/generate", {
+                method: "POST",
+                headers: {
+                    "X-Prodia-Key": API_KEYS.prodia,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "v1-5-pruned-emaonly.safetensors",
+                    prompt: promptText
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // Prodia job status check loop ya direct image url handle karne ke liye
+                if (data.imageUrl) imageUrl = data.imageUrl;
+            }
+        } catch (e) {
+            console.log("Prodia failed, switching to DeepAI...");
+        }
+    }
+
+    // --- STEP 4: Try DeepAI ---
+    if (!imageUrl) {
+        try {
+            console.log("Trying DeepAI...");
+            const formData = new FormData();
+            formData.append('text', promptText);
+            const response = await fetch("https://api.deepai.org/api/text2img", {
+                method: "POST",
+                headers: {
+                    "api-key": "quickstart-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" // Free trial key or user key
+                },
+                body: formData
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.output_url) imageUrl = data.output_url;
+            }
+        } catch (e) {
+            console.log("DeepAI failed, switching to Stability AI...");
+        }
+    }
+
+    // --- STEP 5: Try Stability AI (Final Backup) ---
+    if (!imageUrl) {
+        try {
+            console.log("Trying Stability AI...");
+            const response = await fetch("https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${API_KEYS.stability}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    text_prompts: [{ text: promptText }],
+                    cfg_scale: 7,
+                    steps: 30,
+                    samples: 1
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.artifacts && data.artifacts[0]) {
+                    const base64Data = data.artifacts[0].base64;
+                    imageUrl = `data:image/png;base64,${base64Data}`;
+                }
+            }
+        } catch (e) {
+            console.log("Stability AI also failed.");
+        }
+    }
+
+    // --- Final Result Handling ---
+    if (imageUrl) {
         loader.style.display = 'none';
         outputImage.src = imageUrl;
         outputImage.style.display = 'block';
 
-        // Save generation to history in LocalStorage
+        // Save to History
         const history = JSON.parse(localStorage.getItem('ai_history')) || [];
-        const newEntry = {
-            prompt: promptText,
-            image: imageUrl,
-            date: new Date().toLocaleDateString()
-        };
-        history.unshift(newEntry);
+        history.unshift({ prompt: promptText, image: imageUrl, date: new Date().toLocaleDateString() });
         localStorage.setItem('ai_history', JSON.stringify(history));
-
-    } catch (error) {
-        console.error(error);
-        alert('Error generating image. Please check your API key or try again.');
+    } else {
+        alert('Sabhi APIs waqt par respond nahi kar sakein. Baraye meharbani dobara koshish karein!');
         loader.style.display = 'none';
         placeholderContent.style.display = 'flex';
-    } finally {
-        generateBtn.disabled = false;
-        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
     }
+
+    generateBtn.disabled = false;
+    generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
 });
         
