@@ -1,175 +1,97 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // ------------------------------------
-    // Theme Management
-    // ------------------------------------
-    const toggleAppearanceBtn = document.getElementById("toggleAppearanceBtn");
-    const themeOptionsContainer = document.getElementById("themeOptionsContainer");
-    const setDarkTheme = document.getElementById("setDarkTheme");
-    const setLightTheme = document.getElementById("setLightTheme");
+// Auth Check
+if (localStorage.getItem('ai_logged_in') !== 'true') {
+    window.location.href = 'index.html';
+}
 
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    document.documentElement.setAttribute("data-theme", savedTheme);
+// Apply theme on load
+const savedTheme = localStorage.getItem('ai_theme') || 'dark';
+if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+}
 
-    
-    if (toggleAppearanceBtn && themeOptionsContainer) {
-        toggleAppearanceBtn.addEventListener("click", () => {
-            themeOptionsContainer.classList.toggle("hidden-expand");
-        });
-    }
+// Tab Switching Logic
+const tabBtns = document.querySelectorAll('.tab-btn');
+const contentSections = document.querySelectorAll('.content-section');
 
-    if (setDarkTheme) {
-        setDarkTheme.addEventListener("click", () => {
-            document.documentElement.setAttribute("data-theme", "dark");
-            localStorage.setItem("theme", "dark");
-        });
-    }
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
 
-    if (setLightTheme) {
-        setLightTheme.addEventListener("click", () => {
-            document.documentElement.setAttribute("data-theme", "light");
-            localStorage.setItem("theme", "light");
-        });
-    }
-
-    // ------------------------------------
-    // Resolution Preference
-    // ------------------------------------
-    const settingQualitySelect = document.getElementById("settingQualitySelect");
-    if (settingQualitySelect) {
-        const savedQuality = localStorage.getItem("defaultQuality") || "HD";
-        settingQualitySelect.value = savedQuality;
-
-        settingQualitySelect.addEventListener("change", (e) => {
-            localStorage.setItem("defaultQuality", e.target.value);
-        });
-    }
-
-    // ------------------------------------
-    // Edit Profile View Toggle
-    // ------------------------------------
-    const openPersonalizationBtn = document.getElementById("openPersonalizationBtn");
-    const backToSettingsBtn = document.getElementById("backToSettingsBtn");
-    const settingsMainCard = document.getElementById("settingsMainCard");
-    const personalizationCard = document.getElementById("personalizationCard");
-
-    if (openPersonalizationBtn) {
-        openPersonalizationBtn.addEventListener("click", () => {
-            settingsMainCard.classList.add("hidden-view");
-            personalizationCard.classList.remove("hidden-view");
-        });
-    }
-
-    if (backToSettingsBtn) {
-        backToSettingsBtn.addEventListener("click", () => {
-            personalizationCard.classList.add("hidden-view");
-            settingsMainCard.classList.remove("hidden-view");
-        });
-    }
-
-    // Profile Save
-    const personalizationForm = document.getElementById("personalizationForm");
-    if (personalizationForm) {
-        personalizationForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const username = document.getElementById("updateUsername").value.trim();
-            const password = document.getElementById("updatePassword").value;
-            const confirmPassword = document.getElementById("rewritePassword").value;
-
-            if (password && password !== confirmPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            if (username) {
-                localStorage.setItem("username", username);
-            }
-            if (password) {
-                localStorage.setItem("userPassword", password);
-            }
-
-            alert("Profile updated successfully!");
-            personalizationCard.classList.add("hidden-view");
-            settingsMainCard.classList.remove("hidden-view");
-        });
-    }
-
-    // ------------------------------------
-    // Settings History Modal with Click-to-Redirect Logic
-    // ------------------------------------
-    const openSettingsHistoryBtn = document.getElementById("openSettingsHistoryBtn");
-    const closeHistoryModal = document.getElementById("closeHistoryModal");
-    const historyModal = document.getElementById("historyModal");
-    const clearHistoryModalBtn = document.getElementById("clearHistoryModalBtn");
-    const quickHistoryList = document.getElementById("quickHistoryList");
-
-    function renderHistoryList() {
-        if (!quickHistoryList) return;
-        const history = JSON.parse(localStorage.getItem("promptHistory") || "[]");
-
-        if (history.length === 0) {
-            quickHistoryList.innerHTML = `<p style="color:var(--text-secondary); font-size:13px; text-align:center; padding:20px 0;">No saved prompts found.</p>`;
+        // Handle Logout directly
+        if (targetId === 'logout') {
+            localStorage.removeItem('ai_logged_in');
+            window.location.href = 'index.html';
             return;
         }
 
-        quickHistoryList.innerHTML = history
-            .map((item, index) => {
-                const promptStr = typeof item === 'object' ? item.prompt : item;
+        // Remove active states
+        tabBtns.forEach(b => b.classList.remove('active'));
+        contentSections.forEach(c => c.classList.remove('active'));
 
-                return `
-                <div class="setting-history-card" data-index="${index}" style="padding:12px 16px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition: background 0.2s ease;">
-                    <div>
-                        <p style="font-size:13.5px; font-weight:600; color:var(--text-primary); margin:0;">💬 ${promptStr}</p>
-                        <span style="font-size:11px; color:var(--text-secondary);">Click to open prompt and image in generator →</span>
-                    </div>
-                </div>';
-            })
-            .join("");
+        // Add active state to selected tab & section
+        btn.classList.add('active');
+        document.getElementById(targetId).classList.add('active');
 
-        // Click on item -> Redirect to Generator & Load Image & Prompt
-        document.querySelectorAll(".setting-history-card").forEach(elem => {
-            elem.addEventListener("click", () => {
-                const index = elem.getAttribute("data-index");
-                const history = JSON.parse(localStorage.getItem("promptHistory") || "[]");
-                const selectedItem = history[index];
-
-                localStorage.setItem("activePromptToRestore", JSON.stringify(selectedItem));
-                window.location.href = "gen.html";
-            });
-        });
-    }
-
-    if (openSettingsHistoryBtn && historyModal) {
-        openSettingsHistoryBtn.addEventListener("click", () => {
-            renderHistoryList();
-            historyModal.classList.remove("hidden");
-        });
-    }
-
-    if (closeHistoryModal && historyModal) {
-        closeHistoryModal.addEventListener("click", () => {
-            historyModal.classList.add("hidden");
-        });
-    }
-
-    if (clearHistoryModalBtn) {
-        clearHistoryModalBtn.addEventListener("click", () => {
-            if (confirm("Are you sure you want to clear all prompt logs?")) {
-                localStorage.removeItem("promptHistory");
-                renderHistoryList();
-            }
-        });
-    }
-
-    // Logout Event
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            if (confirm("Are you sure you want to log out?")) {
-                localStorage.setItem("isLoggedIn", "false");
-                localStorage.removeItem("currentUser");
-                sessionStorage.clear();
-                window.location.href = "index.html";
-            }
-        });
-    }
+        // Load History data if history tab is opened
+        if (targetId === 'history') {
+            loadHistory();
+        }
+    });
 });
+
+// Edit Profile Logic
+const profileNameInput = document.getElementById('profile-name');
+const profileEmailInput = document.getElementById('profile-email');
+const profileForm = document.getElementById('profile-form');
+
+const currentUser = JSON.parse(localStorage.getItem('ai_user')) || {};
+profileNameInput.value = currentUser.name || '';
+profileEmailInput.value = currentUser.email || '';
+
+profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    currentUser.name = profileNameInput.value.trim();
+    currentUser.email = profileEmailInput.value.trim();
+    localStorage.setItem('ai_user', JSON.stringify(currentUser));
+    alert('Profile updated successfully!');
+});
+
+// Theme Switching Logic
+const darkThemeBtn = document.getElementById('dark-theme-btn');
+const lightThemeBtn = document.getElementById('light-theme-btn');
+
+darkThemeBtn.addEventListener('click', () => {
+    document.body.classList.remove('light-theme');
+    localStorage.setItem('ai_theme', 'dark');
+    alert('Switched to Dark Theme');
+});
+
+lightThemeBtn.addEventListener('click', () => {
+    document.body.classList.add('light-theme');
+    localStorage.setItem('ai_theme', 'light');
+    alert('Switched to Light Theme');
+});
+
+// Load History Logic
+function loadHistory() {
+    const historyGrid = document.getElementById('history-grid');
+    const historyData = JSON.parse(localStorage.getItem('ai_history')) || [];
+
+    historyGrid.innerHTML = '';
+
+    if (historyData.length === 0) {
+        historyGrid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1; text-align: center;">No generation history found.</p>';
+        return;
+    }
+
+    historyData.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <img src="${item.image}" alt="History Image">
+            <p title="${item.prompt}">${item.prompt}</p>
+        `;
+        historyGrid.appendChild(div);
+    });
+}
+    
