@@ -1,97 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - AI Generator</title>
-    <link rel="stylesheet" href="set.css?v=2">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <header class="navbar">
-        <div class="logo">Settings Panel</div>
-        <a href="gen.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Generator</a>
-    </header>
-
-    <div class="settings-container">
-        <!-- Sidebar Navigation -->
-        <aside class="settings-sidebar">
-            <ul>
-                <li class="tab-btn active" data-target="edit-profile"><i class="fa-solid fa-user-pen"></i> Edit Profile</li>
-                <li class="tab-btn" data-target="history"><i class="fa-solid fa-clock-rotate-left"></i> Generation History</li>
-                <li class="tab-btn" data-target="theme"><i class="fa-solid fa-palette"></i> Appearance Theme</li>
-                <li class="tab-btn logout" data-target="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
-            </ul>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="settings-content">
-            <!-- Section 1: Edit Profile -->
-            <div class="content-section active" id="edit-profile">
-                <h2>Edit Profile</h2>
-                <form id="profile-form">
-                    <div class="input-group">
-                        <label for="profile-name">Name</label>
-                        <input type="text" id="profile-name" placeholder="Your Name">
-                    </div>
-                    <div class="input-group">
-                        <label for="profile-email">Email</label>
-                        <input type="email" id="profile-email" placeholder="Your Email">
-                    </div>
-                    <button type="submit" class="save-btn">Update Profile</button>
-                </form>
-            </div>
-
-            <!-- Section 2: History -->
-            <div class="content-section" id="history">
-                <h2>Generated History</h2>
-                <p>A list of images you have created.</p>
-                <div class="history-grid" id="history-grid">
-                    <!-- History items will be loaded here dynamically by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Section 3: Theme -->
-            <div class="content-section" id="theme">
-                <h2>Appearance Theme</h2>
-                <p>Choose your preferred visual theme.</p>
-                <div class="theme-options">
-                    <button class="theme-btn active-theme" id="dark-theme-btn"><i class="fa-solid fa-moon"></i> Dark</button>
-                    <button class="theme-btn" id="light-theme-btn"><i class="fa-solid fa-sun"></i> Light</button>
-                </div>
-            </div>
-        </main>
-    </div>
-<div class="settings-page-wrapper">
-    <h2>Account & App Settings</h2>
-
-    <!-- Theme Setting -->
-    <div class="setting-group">
-        <label>Dark / Light Theme</label>
-        <input type="checkbox" id="theme-toggle">
+<div class="settings-layout">
+    <!-- Sidebar / Menu Panel -->
+    <div class="settings-sidebar">
+        <h3 style="margin-bottom: 20px; text-align: center;">Settings Panel</h3>
+        <button class="nav-btn active" onclick="switchTab('profile')">Edit Profile</button>
+        <button class="nav-btn" onclick="switchTab('appearance')">Theme & Resolution</button>
+        <button class="nav-btn" onclick="switchTab('history')">Generation History</button>
+        <a href="gen.html" class="nav-btn" style="text-align: center; background: #252525;">← Back to Generator</a>
     </div>
 
-    <!-- Resolution Setting -->
-    <div class="setting-group">
-        <label for="resolution-select">Image Resolution</label>
-        <select id="resolution-select">
-            <option value="512x512">512 x 512 (Standard)</option>
-            <option value="1024x1024">1024 x 1024 (HD)</option>
-            <option value="768x512">768 x 512 (Landscape)</option>
-        </select>
-    </div>
-
-    <!-- History Section -->
-    <div class="setting-group">
-        <h3>Generation History</h3>
-        <button id="clear-history-btn" class="danger-btn">Clear All History</button>
-        <div id="history-list" class="history-container">
-            <!-- Saved items yahan JavaScript se automatically show honge -->
+    <!-- Main Content Area -->
+    <div class="settings-content">
+        
+        <!-- Tab 1: Edit Profile -->
+        <div id="tab-profile" class="tab-pane active">
+            <h2>Edit Profile</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username-input" placeholder="Enter your name" style="width: 100%; padding: 10px; border-radius: 5px; background: #2a2a2a; color: white; border: 1px solid #444;">
+            </div>
+            <button id="save-profile-btn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Save Profile</button>
         </div>
-    </div>
+
+        <!-- Tab 2: Theme & Resolution -->
+        <div id="tab-appearance" class="tab-pane" style="display: none;">
+            <h2>Appearance & Generator Settings</h2>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label><strong>App Theme</strong></label>
+                <select id="theme-select" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; background: #2a2a2a; color: white; border: 1px solid #444;">
+                    <option value="dark">Dark Theme</option>
+                    <option value="light">Light Theme</option>
+                </select>
             </div>
-    
-    <script src="set.js"></script>
-</body>
-</html>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label><strong>Default Image Resolution</strong></label>
+                <select id="resolution-select" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; background: #2a2a2a; color: white; border: 1px solid #444;">
+                    <option value="512x512">512 x 512 (Standard)</option>
+                    <option value="1024x1024">1024 x 1024 (HD)</option>
+                    <option value="768x512">768 x 512 (Landscape)</option>
+                </select>
+            </div>
+            <p style="color: #4ade80; font-size: 13px; margin-top: 15px;">✓ Settings auto-save instantly.</p>
+        </div>
+
+        <!-- Tab 3: Real History -->
+        <div id="tab-history" class="tab-pane" style="display: none;">
+            <h2>Generated History</h2>
+            <p style="color: #aaa; margin-bottom: 15px;">A list of images you have actually created.</p>
+            <button id="clear-history-btn" style="padding: 8px 15px; background: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">Clear All History</button>
+            
+            <!-- Real history yahan inject hogi -->
+            <div id="history-list"></div>
+        </div>
+
+    </div>
+</div>
