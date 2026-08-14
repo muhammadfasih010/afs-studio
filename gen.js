@@ -17,7 +17,7 @@ const outputImage = document.getElementById('output-image');
 
 // Hugging Face Free Model API (Stable Diffusion)
 const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
-const API_KEY = "YAHAN_APNI_KEY_PASTE_KAR_DEN"; // Apni asli Hugging Face API key yahan double quotes ke andar rakh dein
+const API_KEY = "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"; // Apni asli Hugging Face API key yahan double quotes ke andar rakh dein
 
 generateBtn.addEventListener('click', async () => {
     const promptText = promptInput.value.trim();
