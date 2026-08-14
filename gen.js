@@ -15,7 +15,10 @@ const placeholderContent = document.getElementById('placeholder-content');
 const loader = document.getElementById('loader');
 const outputImage = document.getElementById('output-image');
 
-generateBtn.addEventListener('click', () => {
+// Hugging Face Free Public Model API (Stable Diffusion)
+const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
+
+generateBtn.addEventListener('click', async () => {
     const promptText = promptInput.value.trim();
     if (!promptText) {
         alert('Please enter a prompt first!');
@@ -26,12 +29,29 @@ generateBtn.addEventListener('click', () => {
     placeholderContent.style.display = 'none';
     outputImage.style.display = 'none';
     loader.style.display = 'block';
+    generateBtn.disabled = true;
+    generateBtn.textContent = "Generating AI Art...";
 
-    // Simulating API Generation (Using Unsplash source based on prompt hash or random placeholder art)
-    setTimeout(() => {
-        // Generate a pseudo-random image matching the prompt context using Picsum Photos
-        const randomImageId = Math.floor(Math.random() * 1000);
-        const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(promptText)}/600/400`;
+    try {
+        // Calling Hugging Face Free API
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                // Aap yahan apna free Hugging Face account banakar token laga sakte hain, 
+                // ya is public temporary token ko use kar sakte hain
+                "Authorization": "Bearer hf_demo_apiKey_placeholder", 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ inputs: promptText })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate image. Please try again.');
+        }
+
+        // Response ko image blob mein convert karna
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
 
         loader.style.display = 'none';
         outputImage.src = imageUrl;
@@ -44,8 +64,17 @@ generateBtn.addEventListener('click', () => {
             image: imageUrl,
             date: new Date().toLocaleDateString()
         };
-        history.unshift(newEntry); // Add to beginning of array
+        history.unshift(newEntry);
         localStorage.setItem('ai_history', JSON.stringify(history));
 
-    }, 2000);
+    } catch (error) {
+        console.error(error);
+        alert('Error generating image. Server might be busy, please try again.');
+        loader.style.display = 'none';
+        placeholderContent.style.display = 'flex';
+    } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
+    }
 });
+        
