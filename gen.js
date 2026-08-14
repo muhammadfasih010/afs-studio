@@ -161,21 +161,22 @@ generateBtn.addEventListener('click', async () => {
         }
     }
 
-    // --- Final Result Handling ---
+    // --- Final Result Handling (History Saving Logic) ---
     if (imageUrl) {
         loader.style.display = 'none';
         outputImage.src = imageUrl;
         outputImage.style.display = 'block';
 
-        // Save to LocalStorage History (taake settings page par show ho sake)
+        // History Saving Logic
         const history = JSON.parse(localStorage.getItem('ai_history')) || [];
         const newEntry = {
             prompt: promptText,
             image: imageUrl,
             date: new Date().toLocaleDateString()
         };
-        history.unshift(newEntry);
+        history.unshift(newEntry); // Nayi history sabse upar add hogi
         localStorage.setItem('ai_history', JSON.stringify(history));
+        
     } else {
         alert('Sabhi APIs waqt par respond nahi kar sakein. Baraye meharbani dobara koshish karein!');
         loader.style.display = 'none';
