@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - AI Text to Image</title>
+    <title>Settings - AI Generator</title>
     <link rel="stylesheet" href="set.css">
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -14,47 +15,50 @@
     </header>
 
     <div class="settings-container">
+        <!-- Sidebar Navigation -->
         <aside class="settings-sidebar">
             <ul>
                 <li class="tab-btn active" data-target="edit-profile"><i class="fa-solid fa-user-pen"></i> Edit Profile</li>
                 <li class="tab-btn" data-target="history"><i class="fa-solid fa-clock-rotate-left"></i> Generation History</li>
-                <li class="tab-btn" data-target="theme"><i class="fa-solid fa-palette"></i> Theme</li>
+                <li class="tab-btn" data-target="theme"><i class="fa-solid fa-palette"></i> Appearance Theme</li>
                 <li class="tab-btn logout" data-target="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
             </ul>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="settings-content">
-            <!-- Edit Profile Section -->
+            <!-- Section 1: Edit Profile -->
             <div class="content-section active" id="edit-profile">
                 <h2>Edit Profile</h2>
                 <form id="profile-form">
                     <div class="input-group">
                         <label for="profile-name">Name</label>
-                        <input type="text" id="profile-name" required>
+                        <input type="text" id="profile-name" placeholder="Your Name">
                     </div>
                     <div class="input-group">
                         <label for="profile-email">Email</label>
-                        <input type="email" id="profile-email" required>
+                        <input type="email" id="profile-email" placeholder="Your Email">
                     </div>
                     <button type="submit" class="save-btn">Update Profile</button>
                 </form>
             </div>
 
-            <!-- History Section -->
+            <!-- Section 2: History -->
             <div class="content-section" id="history">
                 <h2>Generated History</h2>
+                <p>A list of images you have created.</p>
                 <div class="history-grid" id="history-grid">
-                    <!-- Dynamic items will load here -->
+                    <!-- History items will be loaded here dynamically by JavaScript -->
                 </div>
             </div>
 
-            <!-- Theme Section -->
+            <!-- Section 3: Theme -->
             <div class="content-section" id="theme">
                 <h2>Appearance Theme</h2>
-                <p>Select your preferred visual theme for the workspace.</p>
+                <p>Choose your preferred visual theme.</p>
                 <div class="theme-options">
-                    <button class="theme-btn" id="dark-theme-btn">Dark Theme</button>
-                    <button class="theme-btn" id="light-theme-btn">Light Theme</button>
+                    <button class="theme-btn active-theme" id="dark-theme-btn"><i class="fa-solid fa-moon"></i> Dark</button>
+                    <button class="theme-btn" id="light-theme-btn"><i class="fa-solid fa-sun"></i> Light</button>
                 </div>
             </div>
         </main>
@@ -62,5 +66,4 @@
 
     <script src="set.js"></script>
 </body>
-                </html>
-                
+</html>
