@@ -3,67 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Studio - Image Generator</title>
+    <title>Generator - AI Text to Image</title>
     <link rel="stylesheet" href="gen.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="generator-container">
-        <header class="top-nav glass-card">
-            <div class="brand">
-                <span class="logo-icon">✨</span>
-                <h1>AI Studio</h1>
+    <header class="navbar">
+        <div class="logo">AI Generator</div>
+        <div class="nav-right">
+            <div class="profile-icon" id="profile-icon">
+                <i class="fa-solid fa-user"></i>
             </div>
-            <div class="nav-actions">
-                <a href="set.html" class="profile-btn">
-                    <div id="userAvatarLetter" class="avatar-circle">A</div>
-                    <span id="displayProfileName">Guest</span>
-                </a>
+            <a href="set.html" class="settings-btn" id="settings-btn" title="Settings">
+                <i class="fa-solid fa-gear"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="generator-section">
+            <h1>Turn Words into Art</h1>
+            <p>Type a prompt below to generate your AI image.</p>
+            
+            <div class="prompt-box">
+                <textarea id="prompt-input" placeholder="A futuristic cyberpunk city at sunset, highly detailed..."></textarea>
+                <button id="generate-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
+                </button>
             </div>
-        </header>
+        </section>
 
-        <main class="workspace">
-            <section class="control-panel glass-card">
-                <div class="panel-header">
-                    <h2>Prompt Studio</h2>
-                    <p>Describe the image you want to generate</p>
+        <section class="display-section">
+            <div class="image-card" id="image-card">
+                <div class="placeholder-content" id="placeholder-content">
+                    <i class="fa-solid fa-image"></i>
+                    <p>Your generated image will appear here</p>
                 </div>
-                <div class="input-group">
-                    <label for="imagePrompt">Enter Prompt</label>
-                    <textarea id="imagePrompt" class="form-textarea" placeholder="e.g., A futuristic cyberpunk city in rain, neon lights, highly detailed 8k..." rows="4"></textarea>
-                </div>
-                <div class="input-group">
-                    <label for="aspectRatio">Aspect Ratio</label>
-                    <select id="aspectRatio" class="custom-select">
-                        <option value="1:1">1:1 (Square)</option>
-                        <option value="16:9">16:9 (Landscape)</option>
-                        <option value="9:16">9:16 (Portrait)</option>
-                        <option value="4:3">4:3 (Standard)</option>
-                    </select>
-                </div>
-                <button id="generateBtn" class="btn-glow btn-full">✨ Generate Image</button>
-            </section>
+                <div class="loader" id="loader" style="display: none;"></div>
+                <img id="output-image" src="" alt="Generated AI Art" style="display: none;">
+            </div>
+        </section>
+    </main>
 
-            <section class="preview-panel glass-card">
-                <div class="panel-header">
-                    <h2>Generated Output</h2>
-                    <p>Your AI generated artwork will appear below</p>
-                </div>
-                <div id="imageDisplayArea" class="display-box">
-                    <div id="loader" class="loader hidden"></div>
-                    <div id="placeholderText" class="placeholder">
-                        <span class="placeholder-icon">🖼️</span>
-                        <p>No image generated yet. Enter a prompt and click Generate!</p>
-                    </div>
-                    <img id="generatedImage" class="result-image hidden" alt="Generated Artwork">
-                </div>
-                <div id="imageActions" class="image-actions hidden">
-                    <a id="downloadImageBtn" class="btn-glow btn-full" download="ai-image.png">📥 Download Image</a>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <script src="gen.js?v=2"></script>
+    <script src="gen.js"></script>
 </body>
-  </html>
+</html>
