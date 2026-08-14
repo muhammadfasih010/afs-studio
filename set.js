@@ -16,28 +16,19 @@ const body = document.body;
 const savedTheme = localStorage.getItem('ai_theme') || 'dark';
 if (savedTheme === 'light') {
     body.classList.add('light-theme');
-    lightThemeBtn.classList.add('active-theme');
-    darkThemeBtn.classList.remove('active-theme');
-} else {
-    body.classList.remove('light-theme');
-    darkThemeBtn.classList.add('active-theme');
-    lightThemeBtn.classList.remove('active-theme');
 }
 
 darkThemeBtn.addEventListener('click', () => {
     body.classList.remove('light-theme');
     localStorage.setItem('ai_theme', 'dark');
-    darkThemeBtn.classList.add('active-theme');
-    lightThemeBtn.classList.remove('active-theme');
+    alert('Dark theme applied!');
 });
 
 lightThemeBtn.addEventListener('click', () => {
     body.classList.add('light-theme');
     localStorage.setItem('ai_theme', 'light');
-    lightThemeBtn.classList.add('active-theme');
-    darkThemeBtn.classList.remove('active-theme');
+    alert('Light theme applied!');
 });
-
 
 // --- Tab Navigation Logic ---
 tabBtns.forEach(btn => {
@@ -48,21 +39,18 @@ tabBtns.forEach(btn => {
         if (targetId === 'logout') {
             if(confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('ai_logged_in');
-                // Optionally clear user data: localStorage.removeItem('ai_user');
                 window.location.href = 'index.html';
             }
             return;
         }
 
-        // Remove active classes from tabs and sections
+        // UI Tabs update
         tabBtns.forEach(b => b.classList.remove('active'));
         contentSections.forEach(c => c.classList.remove('active'));
-
-        // Add active class to clicked tab and corresponding section
         btn.classList.add('active');
         document.getElementById(targetId).classList.add('active');
 
-        // Special loading for History tab
+        // Load History data if tab clicked
         if (targetId === 'history') {
             loadHistoryData();
         }
@@ -74,4 +62,44 @@ const profileForm = document.getElementById('profile-form');
 const nameInput = document.getElementById('profile-name');
 const emailInput = document.getElementById('profile-email');
 
-// Load current user
+// Load current user data
+const storedUser = JSON.parse(localStorage.getItem('ai_user'));
+if (storedUser) {
+    nameInput.value = storedUser.name || '';
+    emailInput.value = storedUser.email || '';
+}
+
+profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (storedUser) {
+        storedUser.name = nameInput.value.trim();
+        storedUser.email = emailInput.value.trim();
+        localStorage.setItem('ai_user', JSON.stringify(storedUser));
+        alert('Profile updated successfully!');
+    }
+});
+
+// --- History Rendering Logic ---
+function loadHistoryData() {
+    const historyGrid = document.getElementById('history-grid');
+    const history = JSON.parse(localStorage.getItem('ai_history')) || [];
+
+    historyGrid.innerHTML = ''; // Clear existing
+
+    if (history.length === 0) {
+        historyGrid.innerHTML = '<p style="text-align: center; color: #94a3b8; width: 100%;">No history found. Generate an image first!</p>';
+        return;
+    }
+
+    history.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <img src="${item.image}" alt="History Art" onerror="this.src='https://via.placeholder.com/150'">
+            <p title="${item.prompt}">${item.prompt}</p>
+            <small style="color: #64748b;">${item.date}</small>
+        `;
+        historyGrid.appendChild(div);
+    });
+    }
+            
