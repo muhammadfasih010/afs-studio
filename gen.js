@@ -186,9 +186,4 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = false;
     generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
 });
-  // Generator ke andar yeh code zaroori hai
-const selectedRes = localStorage.getItem('ai_resolution') || '512x512';
-const imgWidth = parseInt(selectedRes.split('x')[0]);
-const imgHeight = parseInt(selectedRes.split('x')[1]);
-const pollUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${imgWidth}&height=${imgHeight}`;
 
