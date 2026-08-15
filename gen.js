@@ -1,10 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("JavaScript Loaded Successfully!");
 
-    // Yahan se apna sara code start karein (Auth check, button listeners, etc.)
-    if (localStorage.getItem('ai_logged_in') !== 'true') {
-        window.location.href = 'index.html';
-        return;
     }
     
 
@@ -192,4 +186,3 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
 });
         
-});
