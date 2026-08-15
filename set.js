@@ -104,10 +104,10 @@ function loadHistoryData() {
         historyGrid.appendChild(div);
     });
     }
-      
-}
-function saveRealRes(res) {
+      // Resolution Logic
+function fakeRes(res) {
     localStorage.setItem('ai_resolution', res);
-    alert('Real Resolution saved: ' + res + '. Next image will be generated in this size!');
-            }
-            
+    alert('Success: Resolution set to ' + res + ' (Applied for next generation)');
+                    }
+    
+}
