@@ -1,66 +1,36 @@
-const authForm = document.getElementById('auth-form');
-const formTitle = document.getElementById('form-title');
-const nameGroup = document.getElementById('name-group');
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const authBtn = document.getElementById('auth-btn');
-const switchMsg = document.getElementById('switch-msg');
-const switchLink = document.getElementById('switch-link');
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    const nameInput = document.getElementById('nameInput');
+    const emailInput = document.getElementById('emailInput');
 
-let isSignup = false;
-
-// Toggle between Login and Signup mode
-switchLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    isSignup = !isSignup;
-    if (isSignup) {
-        formTitle.textContent = 'Create Account';
-        nameGroup.style.display = 'block';
-        nameInput.setAttribute('required', 'true');
-        authBtn.textContent = 'Sign Up';
-        switchMsg.textContent = 'Already have an account?';
-        switchLink.textContent = 'Login';
-    } else {
-        formTitle.textContent = 'Welcome Back';
-        nameGroup.style.display = 'none';
-        nameInput.removeAttribute('required');
-        authBtn.textContent = 'Login';
-        switchMsg.textContent = "Don't have an account?";
-        switchLink.textContent = 'Sign Up';
+    // Optional: Agar pehle se user logged-in hai toh direct generator par bhej dein
+    const existingUser = localStorage.getItem('currentUser');
+    if (existingUser) {
+        // Uncomment line below if you want auto-redirect when already logged in
+        // window.location.href = 'gen.html';
     }
-});
 
-authForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (isSignup) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
         const name = nameInput.value.trim();
-        const userData = { name, email, password };
-        localStorage.setItem('ai_user', JSON.stringify(userData));
-        
-        // Initialize default user settings and empty history
-        localStorage.setItem('ai_theme', 'dark');
-        localStorage.setItem('ai_history', JSON.stringify([]));
-        
-        alert('Account created successfully! Please login.');
-        switchLink.click();
-    } else {
-        const storedUser = JSON.parse(localStorage.getItem('ai_user'));
-        if (storedUser && storedUser.email === email && storedUser.password === password) {
-            localStorage.setItem('ai_logged_in', 'true');
-            window.location.href = 'gen.html';
-        } else {
-            alert('Invalid email or password! Please check or sign up first.');
-        }
-    }
-});
+        const email = emailInput.value.trim();
 
-// Redirect if already logged in
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('ai_logged_in') === 'true') {
+        if (!name || !email) {
+            alert('Please fill in all fields!');
+            return;
+        }
+
+        // Save user data securely to LocalStorage (Connected with Member 2 and Member 3)
+        const userData = {
+            name: name,
+            email: email,
+            loginTime: new Date().toLocaleString()
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+
+        // Smooth transition redirect to Member 2 (gen.html)
         window.location.href = 'gen.html';
-    }
+    });
 });
