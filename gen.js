@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_KEYS = {
         huggingface: "YAHAN_HUGGINGFACE_KEY_DALO",
         prodia: "YAHAN_PRODIA_KEY_DALO",
-        stability: "YAHAN_STABILITY_KEY_DALO"
+        stability: "sk-9JjCnaLaxCT1HWbWegCKIWC5SDmo2tmU4F4Hyt9arPxsIL3a"
     };
 
     // 5. Generate Button Click Event
