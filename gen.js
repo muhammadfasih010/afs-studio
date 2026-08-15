@@ -14,6 +14,18 @@ const promptInput = document.getElementById('prompt-input');
 const placeholderContent = document.getElementById('placeholder-content');
 const loader = document.getElementById('loader');
 const outputImage = document.getElementById('output-image');
+const resOptionBtns = document.querySelectorAll('.res-option-btn');
+
+// Default resolution selection logic from UI buttons
+let selectedResolution = '512x512';
+
+resOptionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        resOptionBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedResolution = btn.getAttribute('data-res');
+    });
+});
 
 // API keys configuration
 const API_KEYS = {
@@ -29,10 +41,9 @@ generateBtn.addEventListener('click', async () => {
         return;
     }
 
-    // Get selected resolution from settings
-    const selectedRes = localStorage.getItem('ai_resolution') || '512x512';
-    const imgWidth = parseInt(selectedRes.split('x')[0]);
-    const imgHeight = parseInt(selectedRes.split('x')[1]);
+    // Extract Width and Height from selected resolution
+    const imgWidth = parseInt(selectedResolution.split('x')[0]);
+    const imgHeight = parseInt(selectedResolution.split('x')[1]);
 
     // UI Loading State
     placeholderContent.style.display = 'none';
@@ -65,7 +76,7 @@ generateBtn.addEventListener('click', async () => {
         console.log("Hugging Face failed, switching to Pollinations...");
     }
 
-    // --- STEP 2: Try Pollinations (Agar HF fail ho gaya) ---
+    // --- STEP 2: Try Pollinations (Real width/height passed here) ---
     if (!imageUrl) {
         try {
             console.log("Trying Pollinations...");
@@ -103,33 +114,11 @@ generateBtn.addEventListener('click', async () => {
                 if (data.imageUrl) imageUrl = data.imageUrl;
             }
         } catch (e) {
-            console.log("Prodia failed, switching to DeepAI...");
+            console.log("Prodia failed, switching to Stability AI...");
         }
     }
 
-    // --- STEP 4: Try DeepAI ---
-    if (!imageUrl) {
-        try {
-            console.log("Trying DeepAI...");
-            const formData = new FormData();
-            formData.append('text', promptText);
-            const response = await fetch("https://api.deepai.org/api/text2img", {
-                method: "POST",
-                headers: {
-                    "api-key": "quickstart-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                },
-                body: formData
-            });
-            if (response.ok) {
-                const data = await response.json();
-                if (data.output_url) imageUrl = data.output_url;
-            }
-        } catch (e) {
-            console.log("DeepAI failed, switching to Stability AI...");
-        }
-    }
-
-    // --- STEP 5: Try Stability AI (Final Backup) ---
+    // --- STEP 4: Try Stability AI ---
     if (!imageUrl) {
         try {
             console.log("Trying Stability AI...");
@@ -161,22 +150,21 @@ generateBtn.addEventListener('click', async () => {
         }
     }
 
-    // --- Final Result Handling (History Saving Logic) ---
+    // --- Final Result Handling ---
     if (imageUrl) {
         loader.style.display = 'none';
         outputImage.src = imageUrl;
         outputImage.style.display = 'block';
 
-        // History Saving Logic
+        // Save to LocalStorage History
         const history = JSON.parse(localStorage.getItem('ai_history')) || [];
         const newEntry = {
             prompt: promptText,
             image: imageUrl,
             date: new Date().toLocaleDateString()
         };
-        history.unshift(newEntry); // Nayi history sabse upar add hogi
+        history.unshift(newEntry);
         localStorage.setItem('ai_history', JSON.stringify(history));
-        
     } else {
         alert('Sabhi APIs waqt par respond nahi kar sakein. Baraye meharbani dobara koshish karein!');
         loader.style.display = 'none';
@@ -186,4 +174,4 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = false;
     generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
 });
-
+        
