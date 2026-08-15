@@ -155,27 +155,13 @@ generateBtn.addEventListener('click', async () => {
         loader.style.display = 'none';
         outputImage.src = imageUrl;
         outputImage.style.display = 'block';
-    // --- Final Result Handling ---
-    if (imageUrl) {
-        loader.style.display = 'none';
-        outputImage.src = imageUrl;
-        outputImage.style.display = 'block';
+    /
 
         // Show Download Button & Set URL
         const downloadBtn = document.getElementById('download-btn');
         downloadBtn.style.display = 'inline-block';
         downloadBtn.href = imageUrl;
 
-        // Save to LocalStorage History
-        const history = JSON.parse(localStorage.getItem('ai_history')) || [];
-        const newEntry = {
-            prompt: promptText,
-            image: imageUrl,
-            date: new Date().toLocaleDateString()
-        };
-        history.unshift(newEntry);
-        localStorage.setItem('ai_history', JSON.stringify(history));
-            }
             
         // Save to LocalStorage History
         const history = JSON.parse(localStorage.getItem('ai_history')) || [];
