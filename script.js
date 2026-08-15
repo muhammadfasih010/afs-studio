@@ -64,4 +64,3 @@ window.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'gen.html';
     }
 });
-    
