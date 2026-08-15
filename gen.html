@@ -3,53 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFS Studio</title>
-<link rel="stylesheet" href="gen.css?v=7.7">
-    
+    <title>AFS Studio - AI Generator</title>
+    <link rel="stylesheet" href="gen.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo">AFS IMG Generator</div>
-        <div class="nav-right">
-            <div class="profile-icon" id="profile-icon">
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <a href="set.html" class="settings-btn" id="settings-btn" title="Settings">
-                <i class="fa-solid fa-gear"></i>
-            </a>
+    <header class="app-header">
+        <div class="logo-area">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AFS Studio</span>
+        </div>
+        <div class="header-right">
+            <span id="welcomeUser">Welcome, User</span>
+            <!-- Profile Button to open Member 3 page (set.html) -->
+            <button id="profileBtn" title="Profile & Settings"><i class="fa-solid fa-user-gear"></i></button>
         </div>
     </header>
 
     <main class="main-container">
-        <section class="generator-section">
-            <h1>TEXT TO IMAGE <br><span class="brand-sub">By AFS</span></h1>
-            <p>Type a prompt below to generate your AI image.</p>
-            
-            <div class="prompt-box">
-                <textarea id="prompt-input" placeholder="A futuristic cyberpunk city at sunset, highly detailed..."></textarea>
-                
-                <!-- REAL RESOLUTION / ASPECT RATIO OPTIONS -->
-                <div class="resolution-selector">
-                    <button type="button" class="res-option-btn active" data-res="512x512">Square (512x512)</button>
-                    <button type="button" class="res-option-btn" data-res="768x512">Landscape (768x512)</button>
-                    <button type="button" class="res-option-btn" data-res="512x768">Portrait (512x768)</button>
-                    <button type="button" class="res-option-btn" data-res="1024x1024">HD Square (1024x1024)</button>
-                </div>
+        <div class="generator-card">
+            <h2>AI Text-to-Image Generator</h2>
+            <div class="input-group">
+                <textarea id="promptInput" placeholder="Describe your masterpiece... (e.g., Cyberpunk neon street, futuristic car, 8k)"></textarea>
             </div>
-        </section>
 
-        <section class="display-section">
-            <div class="image-card" id="image-card">
-                <div class="placeholder-content" id="placeholder-content">
-                    <i class="fa-solid fa-image"></i>
-                    <p>Your generated image will appear here</p>
+            <div class="controls-row">
+                <div class="control-item">
+                    <label><i class="fa-solid fa-expand"></i> Resolution Feature</label>
+                    <select id="resolutionSelect">
+                        <option value="512x512">512 x 512 (Square - Fast)</option>
+                        <option value="768x768" selected>768 x 768 (Balanced)</option>
+                        <option value="1024x1024">1024 x 1024 (HD Quality)</option>
+                    </select>
                 </div>
-                <div class="loader" id="loader" style="display: none;"></div>
-                <img id="output-image" src="" alt="Generated AI Art" style="display: none;">
             </div>
-        </section>
+
+            <button id="generateBtn" class="neon-btn">
+                <i class="fa-solid fa-bolt"></i> Generate Image
+            </button>
+        </div>
+
+        <div class="output-card">
+            <div id="resultContainer" class="result-placeholder">
+                <i class="fa-solid fa-image"></i>
+                <p>Your generated art will appear here</p>
+            </div>
+            <div class="output-actions" id="outputActions" style="display: none;">
+                <a id="downloadBtn" class="neon-btn-secondary" download="afs-studio-art.jpg"><i class="fa-solid fa-download"></i> Download Image</a>
+            </div>
+        </div>
     </main>
 
-    <script src="gen.js?v=6.0"></script>
+    <script src="gen.js"></script>
 </body>
 </html>
