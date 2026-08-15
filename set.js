@@ -1,43 +1,23 @@
-// Auth Check (Secure redirect if not logged in)
+// Auth Check
 if (localStorage.getItem('ai_logged_in') !== 'true') {
     window.location.href = 'index.html';
 }
-// Page load hotay hi history ko run kar dein
-loadHistoryData();
 
-// --- DOM Elements ---
+// Apply theme on load
+const savedTheme = localStorage.getItem('ai_theme') || 'dark';
+if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+}
+
+// Tab Switching Logic
 const tabBtns = document.querySelectorAll('.tab-btn');
 const contentSections = document.querySelectorAll('.content-section');
 
-// --- Theme Switching Logic ---
-const darkThemeBtn = document.getElementById('dark-theme-btn');
-const lightThemeBtn = document.getElementById('light-theme-btn');
-const body = document.body;
-
-// Apply saved theme on load
-const savedTheme = localStorage.getItem('ai_theme') || 'dark';
-if (savedTheme === 'light') {
-    body.classList.add('light-theme');
-}
-
-darkThemeBtn.addEventListener('click', () => {
-    body.classList.remove('light-theme');
-    localStorage.setItem('ai_theme', 'dark');
-    alert('Dark theme applied!');
-});
-
-lightThemeBtn.addEventListener('click', () => {
-    body.classList.add('light-theme');
-    localStorage.setItem('ai_theme', 'light');
-    alert('Light theme applied!');
-});
-
-// --- Tab Navigation Logic ---
 tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const targetId = btn.getAttribute('data-target');
 
-        // Handle Logout
+        // Handle Logout separately
         if (targetId === 'logout') {
             if(confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('ai_logged_in');
@@ -46,68 +26,89 @@ tabBtns.forEach(btn => {
             return;
         }
 
-        // UI Tabs update
-        tabBtns.forEach(b => b.classList.remove('active'));
-        contentSections.forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(targetId).classList.add('active');
+        if (!targetId) return;
 
-        // Load History data if tab clicked
+        // Remove active class from all buttons and sections
+        tabBtns.forEach(b => b.classList.remove('active'));
+        contentSections.forEach(s => s.classList.remove('active'));
+
+        // Add active class to clicked button and target section
+        btn.classList.add('active');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+
+        // If history tab is opened, load history dynamically
         if (targetId === 'history') {
             loadHistoryData();
         }
     });
 });
 
-// --- Edit Profile Logic ---
+// Load Profile Data into Inputs
 const profileForm = document.getElementById('profile-form');
-const nameInput = document.getElementById('profile-name');
-const emailInput = document.getElementById('profile-email');
+const profileNameInput = document.getElementById('profile-name');
+const profileEmailInput = document.getElementById('profile-email');
 
-// Load current user data
 const storedUser = JSON.parse(localStorage.getItem('ai_user'));
 if (storedUser) {
-    nameInput.value = storedUser.name || '';
-    emailInput.value = storedUser.email || '';
+    profileNameInput.value = storedUser.name || '';
+    profileEmailInput.value = storedUser.email || '';
 }
 
 profileForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (storedUser) {
-        storedUser.name = nameInput.value.trim();
-        storedUser.email = emailInput.value.trim();
+        storedUser.name = profileNameInput.value.trim();
+        storedUser.email = profileEmailInput.value.trim();
         localStorage.setItem('ai_user', JSON.stringify(storedUser));
         alert('Profile updated successfully!');
     }
 });
 
-// --- History Rendering Logic ---
+// Theme Switching Logic in Settings
+const darkThemeBtn = document.getElementById('dark-theme-btn');
+const lightThemeBtn = document.getElementById('light-theme-btn');
+
+darkThemeBtn.addEventListener('click', () => {
+    localStorage.setItem('ai_theme', 'dark');
+    document.body.classList.remove('light-theme');
+    alert('Dark theme applied!');
+});
+
+lightThemeBtn.addEventListener('click', () => {
+    localStorage.setItem('ai_theme', 'light');
+    document.body.classList.add('light-theme');
+    alert('Light theme applied!');
+});
+
+// Fake Resolution / Quality Function
+function fakeRes(quality) {
+    localStorage.setItem('ai_fake_resolution', quality);
+    alert('Success: Output quality set to ' + quality + '!');
+}
+
+// Load Generation History Function
 function loadHistoryData() {
     const historyGrid = document.getElementById('history-grid');
-    const history = JSON.parse(localStorage.getItem('ai_history')) || [];
+    const historyData = JSON.parse(localStorage.getItem('ai_history')) || [];
 
-    historyGrid.innerHTML = ''; // Clear existing
+    historyGrid.innerHTML = '';
 
-    if (history.length === 0) {
-        historyGrid.innerHTML = '<p style="text-align: center; color: #94a3b8; width: 100%;">No history found. Generate an image first!</p>';
+    if (historyData.length === 0) {
+        historyGrid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1; text-align: center;">No generation history found yet.</p>';
         return;
     }
 
-    history.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <img src="${item.image}" alt="History Art" onerror="this.src='https://via.placeholder.com/150'">
+    historyData.forEach(item => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+            <img src="${item.image}" alt="Generated Art" onerror="this.src='https://via.placeholder.com/200x120?text=Image'">
             <p title="${item.prompt}">${item.prompt}</p>
-            <small style="color: #64748b;">${item.date}</small>
+            <small style="color: #64748b; font-size: 10px;">${item.date}</small>
         `;
-        historyGrid.appendChild(div);
+        historyGrid.appendChild(historyItem);
     });
-    }
-      // Resolution Logic
-function fakeRes(res) {
-    localStorage.setItem('ai_resolution', res);
-    alert('Success: Resolution set to ' + res + ' (Applied for next generation)');
-                    }
-    
 }
