@@ -2,6 +2,8 @@
 if (localStorage.getItem('ai_logged_in') !== 'true') {
     window.location.href = 'index.html';
 }
+// Page load hotay hi history ko run kar dein
+loadHistoryData();
 
 // --- DOM Elements ---
 const tabBtns = document.querySelectorAll('.tab-btn');
