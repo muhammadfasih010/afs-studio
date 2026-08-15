@@ -1,132 +1,153 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* ==========================================
+   DARK THEME (DEFAULT)
+========================================== */
 body {
-    background-color: #0f172a;
+    background: #090d16;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+    background-attachment: fixed;
     color: #f8fafc;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-body.light-theme {
-    background-color: #f1f5f9;
-    color: #0f172a;
-}
-
-body.light-theme .navbar {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-body.light-theme .settings-sidebar {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-body.light-theme .tab-btn {
-    color: #475569;
-}
-
-body.light-theme .tab-btn:hover, 
-body.light-theme .tab-btn.active {
-    background-color: #e2e8f0;
-    color: #0f172a;
-}
-
-body.light-theme .content-section {
-    background-color: #ffffff;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-body.light-theme input {
-    background-color: #f8fafc;
-    border: 1px solid #cbd5e1;
-    color: #0f172a;
-}
-
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    background-color: #1e293b;
-    border-bottom: 1px solid #334155;
+    padding: 16px 40px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .back-btn {
     color: #38bdf8;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
+    padding: 8px 16px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-btn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: translateX(-3px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
 }
 
 /* Container Layout */
 .settings-container {
     display: flex;
-    flex-direction: column; /* Mobile first: Upar options, neeche content */
-    min-height: calc(100vh - 55px);
+    flex-direction: column;
+    min-height: calc(100vh - 70px);
 }
 
-/* Sidebar / Top Navigation Strip */
+/* Sidebar Navigation Strip */
 .settings-sidebar {
     width: 100%;
-    background-color: #1e293b;
-    border-bottom: 1px solid #334155;
-    padding: 10px;
-    overflow-x: auto; /* Agar options zyada hon toh scroll ho sake */
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 24px;
+    overflow-x: auto;
+}
+
+.settings-sidebar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.settings-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.2);
+    border-radius: 4px;
 }
 
 .settings-sidebar ul {
     list-style: none;
     display: flex;
-    gap: 8px;
+    gap: 10px;
     white-space: nowrap;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .tab-btn {
-    padding: 10px 16px;
+    padding: 10px 18px;
     color: #94a3b8;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
 }
 
 .tab-btn:hover {
-    background-color: #334155;
+    background-color: rgba(30, 41, 59, 0.8);
     color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .tab-btn.active {
-    background-color: #0284c7;
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
 }
 
 .tab-btn.logout {
     color: #f43f5e;
+    margin-left: auto;
 }
 
 .tab-btn.logout:hover {
-    background-color: #ffe4e6;
-    color: #e11d48;
+    background-color: rgba(244, 63, 94, 0.15);
+    color: #ff6b81;
+    border-color: rgba(244, 63, 94, 0.3);
 }
 
 /* Content Area */
 .settings-content {
     flex: 1;
-    padding: 20px;
+    padding: 32px 24px;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
@@ -134,100 +155,247 @@ body.light-theme input {
 
 .content-section {
     display: none;
-    background-color: #1e293b;
-    padding: 20px;
-    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 28px;
+    border-radius: 20px;
     width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .content-section.active {
     display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .content-section h2 {
     margin-bottom: 8px;
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
 }
 
 .content-section p {
     color: #94a3b8;
-    margin-bottom: 20px;
-    font-size: 13px;
+    margin-bottom: 24px;
+    font-size: 14px;
 }
 
+/* Inputs */
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 13px;
+    font-weight: 600;
     color: #cbd5e1;
 }
 
 .input-group input {
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #475569;
-    background-color: #0f172a;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(51, 65, 85, 0.8);
+    background: rgba(9, 13, 22, 0.6);
     color: #f8fafc;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 
+.input-group input:focus {
+    outline: none;
+    border-color: #38bdf8;
+    background: rgba(9, 13, 22, 0.9);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+}
+
+/* Buttons */
 .save-btn, .theme-btn {
-    padding: 10px 18px;
-    background-color: #0284c7;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .save-btn:hover, .theme-btn:hover {
-    background-color: #0369a1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.45);
+    background: linear-gradient(135deg, #60a5fa 0%, #1d4ed8 100%);
 }
 
 .theme-options {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
+.res-btn {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1.5px solid rgba(51, 65, 85, 0.6);
+    color: #cbd5e1;
+    box-shadow: none;
+}
+
+.res-btn:hover {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+/* History Grid Cards */
 .history-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
 }
 
 .history-item {
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 6px;
-    padding: 8px;
+    background: rgba(9, 13, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px;
     text-align: center;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .history-item img {
     width: 100%;
-    height: 100px;
+    height: 120px;
     object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 6px;
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
 .history-item p {
-    font-size: 11px;
+    font-size: 12px;
     color: #cbd5e1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 4px;
+    margin-bottom: 0;
 }
 
-/* Desktop screen ke liye layout ko thoda side-by-side bhi kar sakte hain agar chhein, 
-   lekin aapki demand ke mutabiq mobile par uper options aur neeche content set ho gaya hai. */
-    
+
+/* ==========================================
+   LIGHT THEME OVERRIDES (Triggered by JS)
+========================================== */
+body.light-theme {
+    background: #f8fafc;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+    color: #0f172a;
+}
+
+body.light-theme .navbar {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body.light-theme .back-btn {
+    background: #e0f2fe;
+    border-color: #cbd5e1;
+    color: #0284c7;
+}
+
+body.light-theme .back-btn:hover {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+body.light-theme .settings-sidebar {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body.light-theme .tab-btn {
+    color: #475569;
+}
+
+body.light-theme .tab-btn:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+}
+
+body.light-theme .tab-btn.active {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+}
+
+body.light-theme .tab-btn.logout:hover {
+    background-color: #ffe4e6;
+    color: #e11d48;
+}
+
+body.light-theme .content-section {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .content-section h2 {
+    color: #0f172a;
+}
+
+body.light-theme .content-section p {
+    color: #64748b;
+}
+
+body.light-theme .input-group label {
+    color: #334155;
+}
+
+body.light-theme .input-group input {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body.light-theme .input-group input:focus {
+    background: #ffffff;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+}
+
+body.light-theme .res-btn {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+body.light-theme .res-btn:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+}
+
+body.light-theme .history-item {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+body.light-theme .history-item p {
+    color: #475569;
+}
